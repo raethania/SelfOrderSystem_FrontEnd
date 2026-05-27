@@ -291,7 +291,7 @@ Berisi komponen halaman utama yang dipetakan ke route. Setiap halaman merangkai 
 | `LoginPage.tsx` | `/login` | Halaman login (AuthLayout + Header + LoginForm) |
 | `RegisterPage.tsx` | `/register` | Halaman register (AuthLayout + Header + RegisterForm) |
 | `Homepage.tsx` | `/customer/home` | Halaman utama customer dengan search bar |
-
+h
 ### `src/routes/`
 Konfigurasi routing aplikasi:
 
