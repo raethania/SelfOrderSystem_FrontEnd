@@ -16,9 +16,9 @@ export default function AppRoutes() {
       <Route
         path="/customer/home"
         element={
-          <ProtectedRoute allowedRoles={["customer", "cashier", "admin"]}>
-            <Homepage />
-          </ProtectedRoute>
+          // <ProtectedRoute allowedRoles={["customer", "cashier", "admin"]}>
+          <Homepage />
+          // </ProtectedRoute>
         }
       />
 

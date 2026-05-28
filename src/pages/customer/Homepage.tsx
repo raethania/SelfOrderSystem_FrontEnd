@@ -1,14 +1,17 @@
-import { Search } from "@/components/ui/search"
+import { MenuGrid } from "@/features/menu/components/MenuGrid"
+import { CartBar } from "@/features/menu/components/CartBar"
+import CustomerLayout from "@/layout/CustomerLayout"
+
+
+
 
 export default function Homepage() {
+  const menuItems = Array(8).fill({})
+
   return (
-    <div className="m-5">
-        <header>
-            <h1 className="text-xl mb-2">Table 03</h1>
-            <p className="text-zinc-700 mb-4">Find your favorite meal</p>
-            <Search/>
-        </header>
-        <div></div>
-    </div>
+    <CustomerLayout title="Table 03" subtitle="Find your favorite meal">
+      <MenuGrid items={menuItems} />
+      <CartBar itemCount={2} itemName="Classic Burger" total="Rp. 17.000" />
+    </CustomerLayout>
   )
 }
