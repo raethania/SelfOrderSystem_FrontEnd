@@ -3,6 +3,9 @@ import ProtectedRoute from "./ProtectedRoute";
 import RegisterPage from "@/pages/auth/RegisterPage";
 import LoginPage from "@/pages/auth/LoginPage";
 import Homepage from "@/pages/customer/Homepage";
+import OrderPage from "@/pages/customer/OrderPage";
+import OrderHistory from "@/pages/auth/OrderHistory";
+import ProfilePage from "@/pages/customer/ProfilePage";
 
 
 export default function AppRoutes() {
@@ -16,9 +19,9 @@ export default function AppRoutes() {
       <Route
         path="/customer/home"
         element={
-          // <ProtectedRoute allowedRoles={["customer", "cashier", "admin"]}>
-          <Homepage />
-          // </ProtectedRoute>
+          <ProtectedRoute allowedRoles={["customer", "cashier", "admin"]}>
+            <Homepage />
+          </ProtectedRoute>
         }
       />
 
@@ -26,19 +29,19 @@ export default function AppRoutes() {
         path="/customer/new-order"
         element={
           <ProtectedRoute allowedRoles={["customer", "cashier", "admin"]}>
-            <div>New Order Page</div>
+            <OrderPage/>
           </ProtectedRoute>
         }
       />
-
+{/* 
       <Route
         path="/customer/order-summary"
         element={
-          <ProtectedRoute allowedRoles={["customer", "cashier", "admin"]}>
-            <div>Order Summary Page</div>
-          </ProtectedRoute>
+          // <ProtectedRoute allowedRoles={["customer", "cashier", "admin"]}>
+            
+          // </ProtectedRoute>
         }
-      />
+      /> */}
 
       <Route
         path="/customer/orders"
@@ -62,7 +65,7 @@ export default function AppRoutes() {
         path="/customer/history"
         element={
           <ProtectedRoute allowedRoles={["customer", "cashier", "admin"]}>
-            <div>History Page</div>
+            <OrderHistory/>
           </ProtectedRoute>
         }
       />
@@ -71,7 +74,7 @@ export default function AppRoutes() {
         path="/customer/profile"
         element={
           <ProtectedRoute allowedRoles={["customer", "cashier", "admin"]}>
-            <div>Profile Page</div>
+            <ProfilePage/>
           </ProtectedRoute>
         }
       />
