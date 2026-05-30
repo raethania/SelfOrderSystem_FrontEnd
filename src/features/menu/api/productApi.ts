@@ -1,6 +1,6 @@
 import apiClient from "@/services/apiClient";
 import { ENDPOINTS } from "@/services/endpoints";
-import type { ApiResponse } from "@/types/api.types";
+import type { ApiResponse, PaginatedResponse } from "@/types/api.types";
 import type {
     CreateProductPayload,
     Product,
@@ -23,7 +23,7 @@ function buildProductFormData(
 }
 
 export const productApi = {
-    getProducts(params?: ProductQueryParams): Promise<ApiResponse<Product[]>> {
+    getProducts(params?: ProductQueryParams): Promise<PaginatedResponse<Product>> {
         return apiClient.get(ENDPOINTS.products.list, { params });
     },
 

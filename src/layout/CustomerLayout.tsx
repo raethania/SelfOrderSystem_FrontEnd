@@ -1,7 +1,4 @@
 import Navbar from "@/components/ui/Navbar"
-import { Search } from "@/components/ui/search"
-import { ArrowLeft } from "lucide-react"
-
 type CustomerLayoutProps = {
     children: React.ReactNode
     title: string
@@ -22,7 +19,6 @@ export default function CustomerLayout({ children, title, subtitle }: CustomerLa
                             <h1 className="text-xl md:text-2xl lg:text-3xl font-semibold inline">{title}</h1>
                             <p className="text-zinc-700 mb-0 md:text-base lg:text-lg">{subtitle}</p>
                         </div>
-                        <Search />
                     </header>
                     {children}
                 </div>
