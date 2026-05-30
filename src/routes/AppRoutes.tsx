@@ -5,7 +5,9 @@ import LoginPage from "@/pages/auth/LoginPage";
 import Homepage from "@/pages/customer/Homepage";
 import OrderPage from "@/pages/customer/OrderPage";
 import OrderHistory from "@/pages/auth/OrderHistory";
+import OrderHistoryDetailPage from "@/pages/auth/OrderHistoryDetailPage";
 import ProfilePage from "@/pages/customer/ProfilePage";
+import ProductDetailPage from "@/pages/customer/ProductDetailPage";
 
 
 export default function AppRoutes() {
@@ -30,6 +32,15 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute allowedRoles={["customer", "cashier", "admin"]}>
             <OrderPage/>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/customer/product/:id"
+        element={
+          <ProtectedRoute allowedRoles={["customer", "cashier", "admin"]}>
+            <ProductDetailPage />
           </ProtectedRoute>
         }
       />
@@ -66,6 +77,15 @@ export default function AppRoutes() {
         element={
           <ProtectedRoute allowedRoles={["customer", "cashier", "admin"]}>
             <OrderHistory/>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/customer/history/:id"
+        element={
+          <ProtectedRoute allowedRoles={["customer", "cashier", "admin"]}>
+            <OrderHistoryDetailPage />
           </ProtectedRoute>
         }
       />

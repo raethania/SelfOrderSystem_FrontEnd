@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/card"
 import { useCartStore } from "@/store/cartStore"
 import type { Product } from "@/types/product.types"
+import { useNavigate } from "react-router-dom"
 
 type MenuCardProps = {
     product: Product
@@ -15,8 +16,10 @@ type MenuCardProps = {
 
 export function MenuCard({ product }: MenuCardProps) {
     const addItem = useCartStore((state) => state.addItem)
+    const navigate = useNavigate()
 
-    const handleAdd = () => {
+    const handleAdd = (e: React.MouseEvent) => {
+        e.stopPropagation()
         addItem({
             id: product.id,
             product_id: product.id,
@@ -34,7 +37,10 @@ export function MenuCard({ product }: MenuCardProps) {
         : "https://avatar.vercel.sh/shadcn1"
 
     return (
-        <Card className="relative mx-auto w-full max-w-sm pt-0 overflow-hidden group">
+        <Card
+            className="relative mx-auto w-full max-w-sm pt-0 overflow-hidden group cursor-pointer hover:shadow-md transition-shadow duration-200"
+            onClick={() => navigate(`/customer/product/${product.id}`)}
+        >
             <div className="absolute inset-0 z-30 aspect-video bg-black/35 pointer-events-none" />
             <img
                 src={imageUrl}
