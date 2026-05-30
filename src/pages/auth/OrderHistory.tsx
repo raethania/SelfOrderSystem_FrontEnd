@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import CustomerLayout from "@/layout/CustomerLayout"
 import { Check, X, Clock, ChefHat, Receipt } from "lucide-react"
@@ -50,6 +51,7 @@ const statusConfig: Record<OrderStatus, {
 }
 
 export default function OrderHistory() {
+    const navigate = useNavigate()
     const [orders, setOrders] = useState<Order[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
@@ -145,6 +147,7 @@ export default function OrderHistory() {
                                 <Card
                                     key={order.id}
                                     className="flex-row px-4 py-3 items-center hover:shadow-md transition-shadow cursor-pointer"
+                                    onClick={() => navigate(`/customer/history/${order.id}`)}
                                 >
                                     <div
                                         className="w-12 h-12 rounded-full flex items-center justify-center shrink-0"
