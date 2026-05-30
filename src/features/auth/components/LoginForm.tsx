@@ -2,11 +2,8 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import apiClient from "@/services/apiClient"
-import { ENDPOINTS } from "@/services/endpoints"
+import { authApi } from "@/features/auth/api/authApi"
 import { useAuthStore } from "@/store/authStore"
-import type { AuthResponse } from "@/types/auth.types"
-import type { ApiResponse } from "@/types/api.types"
 
 export default function LoginForm() {
   const [email, setEmail] = useState("")
@@ -23,10 +20,7 @@ export default function LoginForm() {
     setError(null)
 
     try {
-      const response = await apiClient.post(ENDPOINTS.auth.login, {
-        email,
-        password
-      }) as ApiResponse<AuthResponse>
+      const response = await authApi.login({ email, password })
 
       const { user, token } = response.data
       setAuth(user, token)
