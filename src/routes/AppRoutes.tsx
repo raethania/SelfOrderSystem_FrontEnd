@@ -9,6 +9,14 @@ import OrderHistoryDetailPage from "@/pages/auth/OrderHistoryDetailPage";
 import ProfilePage from "@/pages/customer/ProfilePage";
 import ProductDetailPage from "@/pages/customer/ProductDetailPage";
 
+// Admin pages
+import AdminOrdersPage from "@/pages/admin/AdminOrdersPage";
+import AdminOrderDetailPage from "@/pages/admin/AdminOrderDetailPage";
+import AdminCategoriesPage from "@/pages/admin/AdminCategoriesPage";
+import AdminProductsPage from "@/pages/admin/AdminProductsPage";
+import AdminTransactionsPage from "@/pages/admin/AdminTransactionsPage";
+import AdminReportsPage from "@/pages/admin/AdminReportsPage";
+
 
 export default function AppRoutes() {
   return (
@@ -144,11 +152,30 @@ export default function AppRoutes() {
         }
       />
 
+      {/* ===== Admin Routes ===== */}
+      <Route
+        path="/admin/orders"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <AdminOrdersPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/orders/:id"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <AdminOrderDetailPage />
+          </ProtectedRoute>
+        }
+      />
+
       <Route
         path="/admin/menu-management"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
-            <div>Menu Management Page</div>
+            <AdminProductsPage />
           </ProtectedRoute>
         }
       />
@@ -157,7 +184,7 @@ export default function AppRoutes() {
         path="/admin/products"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
-            <div>Product Management Page</div>
+            <AdminProductsPage />
           </ProtectedRoute>
         }
       />
@@ -166,7 +193,16 @@ export default function AppRoutes() {
         path="/admin/categories"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
-            <div>Category Management Page</div>
+            <AdminCategoriesPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/transactions"
+        element={
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <AdminTransactionsPage />
           </ProtectedRoute>
         }
       />
@@ -175,7 +211,7 @@ export default function AppRoutes() {
         path="/admin/reports"
         element={
           <ProtectedRoute allowedRoles={["admin"]}>
-            <div>Report Page</div>
+            <AdminReportsPage />
           </ProtectedRoute>
         }
       />
