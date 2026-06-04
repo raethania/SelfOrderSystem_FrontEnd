@@ -41,9 +41,11 @@ export interface TopProductsQueryParams {
     start_date?: string;
     end_date?: string;
     limit?: number;
+    page?: number;
 }
 
 export interface LowStockQueryParams {
     threshold?: number;
     limit?: number;
+    page?: number;
 }

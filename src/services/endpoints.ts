@@ -35,7 +35,10 @@ export const ENDPOINTS = {
 
     reports: {
         sales: "/reports/sales",
+        salesExport: "/reports/sales/export",
         topProducts: "/reports/top-products",
-        lowStock: "/reports/low-stock"
+        topProductsExport: "/reports/top-products/export",
+        lowStock: "/reports/low-stock",
+        lowStockExport: "/reports/low-stock/export"
     }
 } as const;
