@@ -313,8 +313,8 @@ function AdminReportsContent() {
                 <button
                     onClick={() => handleTabChange("sales")}
                     className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${tab === "sales"
-                        ? "bg-orange-500 text-white"
-                        : "bg-white border border-border text-foreground hover:bg-accent"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-card border border-border text-foreground hover:bg-accent"
                         }`}
                 >
                     Sales
@@ -322,8 +322,8 @@ function AdminReportsContent() {
                 <button
                     onClick={() => handleTabChange("top-products")}
                     className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${tab === "top-products"
-                        ? "bg-orange-500 text-white"
-                        : "bg-white border border-border text-foreground hover:bg-accent"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-card border border-border text-foreground hover:bg-accent"
                         }`}
                 >
                     Top Products
@@ -331,8 +331,8 @@ function AdminReportsContent() {
                 <button
                     onClick={() => handleTabChange("low-stock")}
                     className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${tab === "low-stock"
-                        ? "bg-orange-500 text-white"
-                        : "bg-white border border-border text-foreground hover:bg-accent"
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-card border border-border text-foreground hover:bg-accent"
                         }`}
                 >
                     Low Stock
@@ -349,8 +349,8 @@ function AdminReportsContent() {
                                 key={opt}
                                 onClick={() => updateParams({ group_by: opt })}
                                 className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors capitalize ${salesGroupBy === opt
-                                    ? "bg-orange-500 text-white"
-                                    : "bg-white border border-border text-foreground hover:bg-accent"
+                                    ? "bg-primary text-primary-foreground"
+                                    : "bg-card border border-border text-foreground hover:bg-accent"
                                     }`}
                             >
                                 {opt}
@@ -366,8 +366,8 @@ function AdminReportsContent() {
                                 key={opt}
                                 onClick={() => updateParams({ limit: opt, page: 1 })}
                                 className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${topLimit === opt
-                                    ? "bg-orange-500 text-white"
-                                    : "bg-white border border-border text-foreground hover:bg-accent"
+                                    ? "bg-primary text-primary-foreground"
+                                    : "bg-card border border-border text-foreground hover:bg-accent"
                                     }`}
                             >
                                 Top {opt}
@@ -383,8 +383,8 @@ function AdminReportsContent() {
                                 key={opt}
                                 onClick={() => updateParams({ threshold: opt, page: 1 })}
                                 className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${lowThreshold === opt
-                                    ? "bg-orange-500 text-white"
-                                    : "bg-white border border-border text-foreground hover:bg-accent"
+                                    ? "bg-primary text-primary-foreground"
+                                    : "bg-card border border-border text-foreground hover:bg-accent"
                                     }`}
                             >
                                 &le;{opt}
