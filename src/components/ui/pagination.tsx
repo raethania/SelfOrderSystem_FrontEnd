@@ -118,7 +118,6 @@ function PaginationEllipsis({
   )
 }
 
-
 export {
   Pagination,
   PaginationContent,
@@ -126,5 +125,5 @@ export {
   PaginationItem,
   PaginationLink,
   PaginationNext,
-  PaginationPrevious
+  PaginationPrevious,
 }
