@@ -10,6 +10,7 @@ import OrderDetailLayout from "@/layout/OrderDetailLayout"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Button } from "@/components/ui/button"
+import { RefreshButton } from "@/components/ui/RefreshButton"
 import { useCartStore } from "@/store/cartStore"
 
 // ── Status config (sama dengan OrderHistory) ──────────────────────────────────
@@ -87,20 +88,21 @@ export default function OrderHistoryDetailPage() {
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
 
-    useEffect(() => {
+    const fetchOrder = async (showLoading = true) => {
         if (!id) return
-        async function fetchOrder() {
-            setIsLoading(true)
-            setError(null)
-            try {
-                const res = await orderApi.getOrderById(Number(id))
-                setOrder(res.data)
-            } catch {
-                setError("Order tidak ditemukan atau gagal dimuat.")
-            } finally {
-                setIsLoading(false)
-            }
+        if (showLoading) setIsLoading(true)
+        setError(null)
+        try {
+            const res = await orderApi.getOrderById(Number(id))
+            setOrder(res.data)
+        } catch {
+            setError("Order tidak ditemukan atau gagal dimuat.")
+        } finally {
+            if (showLoading) setIsLoading(false)
         }
+    }
+
+    useEffect(() => {
         fetchOrder()
     }, [id])
 
@@ -144,6 +146,7 @@ export default function OrderHistoryDetailPage() {
             title={order ? `Detail ${order.order_number}` : "Detail Order"}
             backLabel="Orders"
             backTo="/customer/history"
+            rightAction={<RefreshButton onRefresh={() => fetchOrder(true)} colorClass="text-orange-600" />}
         >
             {/* ── Loading ── */}
             {isLoading && (

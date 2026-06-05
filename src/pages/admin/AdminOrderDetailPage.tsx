@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import AdminLayout from "@/layout/AdminLayout";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import { RefreshButton } from "@/components/ui/RefreshButton";
 import { orderApi } from "@/features/order/api/orderApi";
 import { formatRupiah } from "@/lib/formatCurrency";
 import { formatDateTime } from "@/lib/formatDate";
@@ -49,14 +50,18 @@ export default function AdminOrderDetailPage() {
 
     return (
         <AdminLayout title="Order Detail" subtitle="View and manage order">
-            {/* Back button */}
-            <button
-                onClick={() => navigate("/admin/orders")}
-                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors"
-            >
-                <ArrowLeft size={16} />
-                Back to Orders
-            </button>
+            {/* Header actions */}
+            <div className="flex items-center justify-between mb-6">
+                {/* Back button */}
+                <button
+                    onClick={() => navigate("/admin/orders")}
+                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                    <ArrowLeft size={16} />
+                    Back to Orders
+                </button>
+                <RefreshButton onRefresh={fetchOrder} />
+            </div>
 
             {/* Loading */}
             {isLoading && (

@@ -10,6 +10,7 @@ import {
 import AdminLayout from "@/layout/AdminLayout";
 import { Modal, ConfirmModal } from "@/components/ui/Modal";
 import { PaginationControl } from "@/components/ui/PaginationControl";
+import { RefreshButton } from "@/components/ui/RefreshButton";
 import { productApi } from "@/features/menu/api/productApi";
 import { categoryApi } from "@/features/menu/api/categoryApi";
 import { formatRupiah } from "@/lib/formatCurrency";
@@ -226,6 +227,9 @@ export default function AdminProductsPage() {
                         <Plus size={18} />
                         Add Product
                     </button>
+
+                    {/* Refresh Button */}
+                    <RefreshButton onRefresh={fetchProducts} />
                 </div>
 
                 {/* Filter chips */}

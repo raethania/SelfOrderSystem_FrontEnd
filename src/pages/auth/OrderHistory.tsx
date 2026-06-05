@@ -4,6 +4,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/com
 import CustomerLayout from "@/layout/CustomerLayout"
 import { Check, X, Clock, ChefHat, Receipt } from "lucide-react"
 import { orderApi } from "@/features/order/api/orderApi"
+import { RefreshButton } from "@/components/ui/RefreshButton"
 import type { Order, OrderStatus } from "@/types/order.types"
 
 const statusConfig: Record<OrderStatus, {
@@ -107,6 +108,14 @@ export default function OrderHistory() {
 
     return (
         <CustomerLayout title="Order History" subtitle="View all your orders">
+            {/* Action Bar */}
+            <div className="flex justify-end mb-4">
+                <RefreshButton onRefresh={() => {
+                    setPage(1)
+                    return fetchOrders(1, false)
+                }} colorClass="text-orange-600" />
+            </div>
+
             {/* Loading (initial) */}
             {isLoading && orders.length === 0 && (
                 <div className="flex justify-center items-center py-20">

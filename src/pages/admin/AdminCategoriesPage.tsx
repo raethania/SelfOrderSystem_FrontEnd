@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { Plus, Pencil, Trash2, Search as SearchIcon } from "lucide-react";
 import AdminLayout from "@/layout/AdminLayout";
-import { Modal, ConfirmModal } from "@/components/ui/Modal";
+import { ConfirmModal, Modal } from "@/components/ui/Modal";
+import { PaginationControl } from "@/components/ui/PaginationControl";
+import { RefreshButton } from "@/components/ui/RefreshButton";
 import { categoryApi } from "@/features/menu/api/categoryApi";
 import { formatDate } from "@/lib/formatDate";
 import type { Category } from "@/types/category.types";
@@ -11,6 +13,8 @@ export default function AdminCategoriesPage() {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [searchQuery, setSearchQuery] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
 
     // Modal states
     const [isFormOpen, setIsFormOpen] = useState(false);
@@ -27,10 +31,16 @@ export default function AdminCategoriesPage() {
         setIsLoading(true);
         setError(null);
         try {
-            const params: Record<string, unknown> = {};
+            const params: Record<string, unknown> = {
+                page: currentPage,
+                limit: 12,
+            };
             if (searchQuery) params.name = searchQuery;
             const res = await categoryApi.getCategories(params as any);
             setCategories(res.data);
+            if ("meta" in res && (res as any).meta) {
+                setLastPage((res as any).meta.last_page);
+            }
         } catch {
             setError("Failed to load categories.");
         } finally {
@@ -39,9 +49,15 @@ export default function AdminCategoriesPage() {
     };
 
     useEffect(() => {
-        const timeout = setTimeout(fetchCategories, 300);
+        const timeout = setTimeout(() => {
+            setCurrentPage(1);
+        }, 300);
         return () => clearTimeout(timeout);
     }, [searchQuery]);
+
+    useEffect(() => {
+        fetchCategories();
+    }, [currentPage, searchQuery]);
 
     const openCreateForm = () => {
         setEditingCategory(null);
@@ -133,6 +149,9 @@ export default function AdminCategoriesPage() {
                     <Plus size={18} />
                     Add Category
                 </button>
+
+                {/* Refresh Button */}
+                <RefreshButton onRefresh={fetchCategories} />
             </div>
 
             {/* Loading */}
@@ -213,6 +232,16 @@ export default function AdminCategoriesPage() {
                                     )}
                                 </div>
                             ))}
+                        </div>
+                    )}
+                    
+                    {categories.length > 0 && (
+                        <div className="mt-6">
+                            <PaginationControl
+                                currentPage={currentPage}
+                                lastPage={lastPage}
+                                onPageChange={setCurrentPage}
+                            />
                         </div>
                     )}
                 </>

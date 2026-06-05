@@ -4,6 +4,7 @@ import AdminLayout from "@/layout/AdminLayout";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { DateFilter } from "@/components/ui/DateFilter";
 import { PaginationControl } from "@/components/ui/PaginationControl";
+import { RefreshButton } from "@/components/ui/RefreshButton";
 import { orderApi } from "@/features/order/api/orderApi";
 import { formatRupiah } from "@/lib/formatCurrency";
 import { formatDateTime, todayApiDate } from "@/lib/formatDate";
@@ -106,6 +107,9 @@ export default function AdminOrdersPage() {
                         setCurrentPage(1);
                     }}
                 />
+
+                {/* Refresh Button */}
+                <RefreshButton onRefresh={fetchOrders} />
             </div>
 
             {/* Loading */}

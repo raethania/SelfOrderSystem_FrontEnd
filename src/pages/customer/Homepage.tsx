@@ -1,6 +1,7 @@
 import PaginationButton from "@/components/ui/PaginationButton"
 import { Search } from "@/components/ui/search"
-import { useEffect, useRef, useState } from "react"
+import { RefreshButton } from "@/components/ui/RefreshButton"
+import { useEffect, useRef, useState, useCallback } from "react"
 
 import { MenuGrid } from "@/features/menu/components/MenuGrid"
 import { CartBar } from "@/features/menu/components/CartBar"
@@ -46,30 +47,30 @@ export default function Homepage() {
         }, 400)
     }
 
-    useEffect(() => {
-        async function fetchProducts() {
-            setIsLoading(true)
-            setError(null)
-            try {
-                const productsRes = await productApi.getProducts({
-                    status: "available",
-                    page: currentPage,
-                    category_id: selectedCategory || undefined,
-                    search: debouncedSearch || undefined
-                })
-                setProducts(productsRes.data)
-                if (productsRes.meta) {
-                    setLastPage(productsRes.meta.last_page)
-                }
-            } catch {
-                setError("Failed to load menu. Please try again.")
-            } finally {
-                setIsLoading(false)
+    const fetchProducts = useCallback(async () => {
+        setIsLoading(true)
+        setError(null)
+        try {
+            const productsRes = await productApi.getProducts({
+                status: "available",
+                page: currentPage,
+                category_id: selectedCategory || undefined,
+                search: debouncedSearch || undefined
+            })
+            setProducts(productsRes.data)
+            if (productsRes.meta) {
+                setLastPage(productsRes.meta.last_page)
             }
+        } catch {
+            setError("Failed to load menu. Please try again.")
+        } finally {
+            setIsLoading(false)
         }
-
-        fetchProducts()
     }, [currentPage, selectedCategory, debouncedSearch])
+
+    useEffect(() => {
+        fetchProducts()
+    }, [fetchProducts])
 
     const handleCategoryChange = (catId: number | null) => {
         setSelectedCategory(catId)
@@ -81,12 +82,15 @@ export default function Homepage() {
     return (
         <CustomerLayout title="Table 03" subtitle="Find your favorite meal">
             {/* Search bar — hanya muncul di Homepage */}
-            <div className="mb-5">
-                <Search
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    placeholder="Search menu items..."
-                />
+            <div className="mb-5 flex items-center gap-3">
+                <div className="flex-1">
+                    <Search
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        placeholder="Search menu items..."
+                    />
+                </div>
+                <RefreshButton onRefresh={fetchProducts} colorClass="text-orange-600" />
             </div>
 
             {/* Category filters */}

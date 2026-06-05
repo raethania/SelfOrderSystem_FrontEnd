@@ -10,6 +10,8 @@ import {
     StickyNote,
     Package,
 } from "lucide-react";
+import { RefreshButton } from "@/components/ui/RefreshButton";
+import { PaginationControl } from "@/components/ui/PaginationControl";
 import KitchenLayout from "@/layout/KitchenLayout";
 import { StatusBadge } from "@/components/ui/StatusBadge";
 import { DateFilter } from "@/components/ui/DateFilter";
@@ -67,6 +69,8 @@ export default function KitchenOrdersPage() {
     // Filters
     const [statusFilter, setStatusFilter] = useState<OrderStatus | "">("");
     const [dateFilter, setDateFilter] = useState(todayApiDate());
+    const [currentPage, setCurrentPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
 
     // Detail panel
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -98,13 +102,17 @@ export default function KitchenOrdersPage() {
             setError(null);
             try {
                 const params: Record<string, unknown> = {
-                    limit: 50,
+                    page: currentPage,
+                    limit: 30, // 30 is good for board view (3 columns of 10)
                     date: dateFilter,
                 };
                 if (statusFilter) params.status = statusFilter;
 
                 const res = await orderApi.getOrders(params as any);
                 setOrders(res.data);
+                if ("meta" in res && (res as any).meta) {
+                    setLastPage((res as any).meta.last_page);
+                }
             } catch {
                 setError("Failed to load orders. Please try again.");
             } finally {
@@ -118,7 +126,7 @@ export default function KitchenOrdersPage() {
     // Initial + filter change
     useEffect(() => {
         fetchOrders(true);
-    }, [fetchOrders]);
+    }, [fetchOrders, currentPage]);
 
     // Polling every 15 seconds
     useEffect(() => {
@@ -194,11 +202,14 @@ export default function KitchenOrdersPage() {
             {/* ── Filters ── */}
             <div className="flex flex-col gap-4 mb-6">
                 {/* Status filter - Dropdown (Mobile/Tablet) & Chips (Desktop) */}
-                <div>
+                <div className="flex items-center gap-3">
                     {/* Mobile/Tablet Dropdown */}
                     <select
                         value={statusFilter}
-                        onChange={(e) => setStatusFilter(e.target.value as OrderStatus | "")}
+                        onChange={(e) => {
+                            setStatusFilter(e.target.value as OrderStatus | "");
+                            setCurrentPage(1);
+                        }}
                         className="w-full lg:hidden h-11 px-4 rounded-xl border border-border bg-card text-sm font-medium outline-none transition-colors focus:border-orange-500 focus:ring-1 focus:ring-orange-500 appearance-none"
                     >
                         {STATUS_OPTIONS.map((opt) => (
@@ -209,11 +220,14 @@ export default function KitchenOrdersPage() {
                     </select>
 
                     {/* Desktop Chips */}
-                    <div className="hidden lg:flex gap-2">
+                    <div className="hidden lg:flex gap-2 flex-1">
                         {STATUS_OPTIONS.map((opt) => (
                             <button
                                 key={opt.value}
-                                onClick={() => setStatusFilter(opt.value)}
+                                onClick={() => {
+                                    setStatusFilter(opt.value);
+                                    setCurrentPage(1);
+                                }}
                                 className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors shrink-0 ${statusFilter === opt.value
                                     ? "bg-orange-600 text-white"
                                     : "bg-card border border-border text-foreground hover:bg-accent"
@@ -223,12 +237,21 @@ export default function KitchenOrdersPage() {
                             </button>
                         ))}
                     </div>
+
+                    {/* Refresh Button */}
+                    <RefreshButton
+                        onRefresh={() => fetchOrders(true)}
+                        colorClass="text-orange-600"
+                    />
                 </div>
 
                 {/* Date filter */}
                 <DateFilter
                     value={dateFilter}
-                    onChange={(v) => setDateFilter(v)}
+                    onChange={(v) => {
+                        setDateFilter(v);
+                        setCurrentPage(1);
+                    }}
                 />
             </div>
 
@@ -338,6 +361,16 @@ export default function KitchenOrdersPage() {
                                     }
                                 />
                             ))}
+                        </div>
+                    )}
+
+                    {orders.length > 0 && (
+                        <div className="mt-6">
+                            <PaginationControl
+                                currentPage={currentPage}
+                                lastPage={lastPage}
+                                onPageChange={setCurrentPage}
+                            />
                         </div>
                     )}
 

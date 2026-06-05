@@ -9,6 +9,7 @@ import {
 import AdminLayout from "@/layout/AdminLayout";
 import { DateRangeFilter } from "@/components/ui/DateFilter";
 import { PaginationControl } from "@/components/ui/PaginationControl";
+import { RefreshButton } from "@/components/ui/RefreshButton";
 import { reportApi } from "@/features/report/api/reportApi";
 import { formatRupiah } from "@/lib/formatCurrency";
 import { todayApiDate, daysAgoApiDate } from "@/lib/formatDate";
@@ -296,7 +297,14 @@ function AdminReportsContent() {
             subtitle={subtitles[tab] || ""}
         >
             {/* Header Right Actions (Injected via negative margin on desktop, or normal flow) */}
-            <div className="flex justify-end md:-mt-14 mb-6">
+            <div className="flex justify-end md:-mt-14 mb-6 gap-3">
+                <RefreshButton 
+                    onRefresh={async () => {
+                        if (tab === "sales") await fetchSales();
+                        if (tab === "top-products") await fetchTopProducts();
+                        if (tab === "low-stock") await fetchLowStock();
+                    }} 
+                />
                 <button
                     onClick={handleDownload}
                     disabled={isDownloading || isLoading || !!error}

@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import CashierLayout from "@/layout/CashierLayout";
 import { StatusBadge } from "@/components/ui/StatusBadge";
+import { RefreshButton } from "@/components/ui/RefreshButton";
 import { orderApi } from "@/features/order/api/orderApi";
 import { transactionApi } from "@/features/transaction/api/transactionApi";
 import { formatRupiah } from "@/lib/formatCurrency";
@@ -129,14 +130,18 @@ export default function CashierOrderDetailPage() {
 
     return (
         <CashierLayout title="Order Detail" subtitle="View and process order">
-            {/* Back button */}
-            <button
-                onClick={() => navigate("/cashier/orders")}
-                className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors"
-            >
-                <ArrowLeft size={16} />
-                Back to Orders
-            </button>
+            {/* Header actions */}
+            <div className="flex items-center justify-between mb-6">
+                {/* Back button */}
+                <button
+                    onClick={() => navigate("/cashier/orders")}
+                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                >
+                    <ArrowLeft size={16} />
+                    Back to Orders
+                </button>
+                <RefreshButton onRefresh={fetchOrder} />
+            </div>
 
             {/* Loading */}
             {isLoading && (

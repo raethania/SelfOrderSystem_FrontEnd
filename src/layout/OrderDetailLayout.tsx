@@ -8,6 +8,7 @@ type OrderDetailLayoutProps = {
     title?: string
     backLabel?: string
     backTo?: string
+    rightAction?: React.ReactNode
 }
 
 /**
@@ -20,6 +21,7 @@ export default function OrderDetailLayout({
     title = "Order Detail",
     backLabel = "Orders",
     backTo,
+    rightAction,
 }: OrderDetailLayoutProps) {
     const navigate = useNavigate()
 
@@ -58,6 +60,13 @@ export default function OrderDetailLayout({
                         <span className="text-muted-foreground/50">›</span>
                         <span className="font-medium text-foreground truncate">{title}</span>
                     </nav>
+
+                    {/* Right action */}
+                    {rightAction && (
+                        <div className="ml-auto flex items-center">
+                            {rightAction}
+                        </div>
+                    )}
                 </header>
 
                 {/* Page content */}

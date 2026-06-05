@@ -7,6 +7,8 @@ import type { Product } from "@/types/product.types"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { RefreshButton } from "@/components/ui/RefreshButton"
+import { useCallback } from "react"
 
 export default function ProductDetailPage() {
     const { id } = useParams<{ id: string }>()
@@ -19,22 +21,23 @@ export default function ProductDetailPage() {
     const [quantity, setQuantity] = useState(1)
     const [added, setAdded] = useState(false)
 
+    const fetchProduct = useCallback(async () => {
+        setIsLoading(true)
+        setError(null)
+        try {
+            const res = await productApi.getProductById(Number(id))
+            setProduct(res.data)
+        } catch {
+            setError("Produk tidak ditemukan atau gagal dimuat.")
+        } finally {
+            setIsLoading(false)
+        }
+    }, [id])
+
     useEffect(() => {
         if (!id) return
-        async function fetchProduct() {
-            setIsLoading(true)
-            setError(null)
-            try {
-                const res = await productApi.getProductById(Number(id))
-                setProduct(res.data)
-            } catch {
-                setError("Produk tidak ditemukan atau gagal dimuat.")
-            } finally {
-                setIsLoading(false)
-            }
-        }
         fetchProduct()
-    }, [id])
+    }, [id, fetchProduct])
 
     const formatPrice = (price: number | string) =>
         `Rp. ${Number(price).toLocaleString("id-ID")}`
@@ -61,19 +64,22 @@ export default function ProductDetailPage() {
         <div className="min-h-dvh bg-background flex flex-col">
 
             {/* ── Sticky Header ── */}
-            <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border px-5 py-3 flex items-center gap-3">
-                <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => navigate(-1)}
-                    aria-label="Kembali"
-                    className="rounded-full shrink-0"
-                >
-                    <ArrowLeft className="w-4 h-4" />
-                </Button>
-                <h1 className="text-base font-semibold text-foreground truncate">
-                    {product ? product.name : "Detail Produk"}
-                </h1>
+            <header className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border px-5 py-3 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => navigate(-1)}
+                        aria-label="Kembali"
+                        className="rounded-full shrink-0"
+                    >
+                        <ArrowLeft className="w-4 h-4" />
+                    </Button>
+                    <h1 className="text-base font-semibold text-foreground truncate">
+                        {product ? product.name : "Detail Produk"}
+                    </h1>
+                </div>
+                <RefreshButton onRefresh={fetchProduct} colorClass="text-orange-600" />
             </header>
 
             {/* ── Loading ── */}

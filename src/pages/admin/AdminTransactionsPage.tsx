@@ -3,6 +3,7 @@ import AdminLayout from "@/layout/AdminLayout";
 import { DateRangeFilter } from "@/components/ui/DateFilter";
 import { DataTable } from "@/components/ui/DataTable";
 import { PaginationControl } from "@/components/ui/PaginationControl";
+import { RefreshButton } from "@/components/ui/RefreshButton";
 import { transactionApi } from "@/features/transaction/api/transactionApi";
 import { formatRupiah } from "@/lib/formatCurrency";
 import { formatDateTime, todayApiDate, daysAgoApiDate } from "@/lib/formatDate";
@@ -170,6 +171,9 @@ export default function AdminTransactionsPage() {
                         </button>
                     ))}
                 </div>
+
+                {/* Refresh Button */}
+                <RefreshButton onRefresh={fetchTransactions} />
             </div>
 
             {/* Loading */}
