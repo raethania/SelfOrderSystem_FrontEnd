@@ -22,6 +22,7 @@ export interface Order {
     notes?: string | null;
     items: OrderItem[];
     total: number;
+    is_paid?: boolean;
     created_at: string;
     updated_at?: string;
 }

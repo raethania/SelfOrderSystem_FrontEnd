@@ -31,7 +31,7 @@ export interface CreateProductPayload {
     price: number;
     stock: number;
     image?: File | null;
-    status: ProductStatus;
+    status?: ProductStatus;
 }
 
 export type UpdateProductPayload = Partial<CreateProductPayload>;
