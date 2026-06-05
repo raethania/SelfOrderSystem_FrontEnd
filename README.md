@@ -349,10 +349,11 @@ Aplikasi menggunakan **role-based access control (RBAC)** melalui komponen `Prot
 |---|---|---|
 | `/customer/home` | Homepage | `customer`, `cashier`, `admin` |
 | `/customer/new-order` | Buat Pesanan Baru | `customer`, `cashier`, `admin` |
-| `/customer/order-summary` | Ringkasan Pesanan | `customer`, `cashier`, `admin` |
+| `/customer/product/:id` | Detail Produk | `customer`, `cashier`, `admin` |
 | `/customer/orders` | Daftar Pesanan Customer | `customer`, `cashier`, `admin` |
 | `/customer/menu` | Menu Makanan | `customer`, `cashier`, `admin` |
 | `/customer/history` | Riwayat Pesanan | `customer`, `cashier`, `admin` |
+| `/customer/history/:id` | Detail Riwayat Pesanan | `customer`, `cashier`, `admin` |
 | `/customer/profile` | Profil Customer | `customer`, `cashier`, `admin` |
 
 ### Cashier Routes
@@ -367,8 +368,7 @@ Aplikasi menggunakan **role-based access control (RBAC)** melalui komponen `Prot
 
 | Route | Halaman | Roles yang Diizinkan |
 |---|---|---|
-| `/kitchen/dashboard` | Dashboard Dapur | `kitchen`, `admin` |
-| `/kitchen/queue` | Antrian Pesanan | `kitchen`, `admin` |
+| `/kitchen/orders` | Antrian Pesanan (Kitchen Queue) | `kitchen`, `admin` |
 
 ### Admin Routes
 
@@ -387,7 +387,7 @@ Setelah login berhasil, user akan di-redirect berdasarkan role:
 |---|---|
 | `admin` | `/admin/products` |
 | `cashier` | `/cashier/table-selection` |
-| `kitchen` | `/kitchen/dashboard` |
+| `kitchen` | `/kitchen/orders` |
 | `customer` | `/customer/home` |
 
 ---
@@ -586,14 +586,6 @@ npm install
 ```
 
 ---
-
-## 🤝 Kontribusi
-
-1. Fork repository ini
-2. Buat branch baru: `git checkout -b feature/nama-fitur`
-3. Commit perubahan: `git commit -m "feat: deskripsi perubahan"`
-4. Push ke branch: `git push origin feature/nama-fitur`
-5. Buat Pull Request
 
 ### Konvensi Commit
 
