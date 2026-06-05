@@ -8,14 +8,6 @@ import { formatRupiah } from "@/lib/formatCurrency";
 import { formatDateTime } from "@/lib/formatDate";
 import type { Order, OrderStatus } from "@/types/order.types";
 
-const ALL_STATUSES: OrderStatus[] = [
-    "pending",
-    "preparing",
-    "ready",
-    "completed",
-    "cancelled",
-];
-
 export default function AdminOrderDetailPage() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();

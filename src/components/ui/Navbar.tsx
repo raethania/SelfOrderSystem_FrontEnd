@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom"
-import { House, UtensilsCrossed, ClipboardList, Clock, User } from "lucide-react"
+import { House, ClipboardList, Clock, User } from "lucide-react"
 
 type NavbarItemType = {
     icon: React.ReactNode
