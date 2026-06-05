@@ -33,7 +33,6 @@ const INITIAL_FORM: CreateProductPayload = {
     price: 0,
     stock: 0,
     image: null,
-    status: "available",
 };
 
 export default function AdminProductsPage() {
@@ -237,11 +236,10 @@ export default function AdminProductsPage() {
                             setCategoryFilter("");
                             setCurrentPage(1);
                         }}
-                        className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
-                            categoryFilter === ""
+                        className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${categoryFilter === ""
                                 ? "bg-primary text-primary-foreground"
                                 : "bg-card border border-border text-foreground hover:bg-accent"
-                        }`}
+                            }`}
                     >
                         All Categories
                     </button>
@@ -252,11 +250,10 @@ export default function AdminProductsPage() {
                                 setCategoryFilter(cat.id);
                                 setCurrentPage(1);
                             }}
-                            className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
-                                categoryFilter === cat.id
+                            className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${categoryFilter === cat.id
                                     ? "bg-primary text-primary-foreground"
                                     : "bg-card border border-border text-foreground hover:bg-accent"
-                            }`}
+                                }`}
                         >
                             {cat.name}
                         </button>
@@ -272,11 +269,10 @@ export default function AdminProductsPage() {
                                 setStatusFilter(opt.value);
                                 setCurrentPage(1);
                             }}
-                            className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
-                                statusFilter === opt.value
+                            className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${statusFilter === opt.value
                                     ? "bg-primary text-primary-foreground"
                                     : "bg-card border border-border text-foreground hover:bg-accent"
-                            }`}
+                                }`}
                         >
                             {opt.label}
                         </button>
@@ -335,11 +331,10 @@ export default function AdminProductsPage() {
                                         />
                                         {/* Status badge */}
                                         <span
-                                            className={`absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider ${
-                                                product.status === "available"
+                                            className={`absolute top-2 left-2 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wider ${product.status === "available"
                                                     ? "bg-green-500/90 text-white"
                                                     : "bg-red-500/90 text-white"
-                                            }`}
+                                                }`}
                                         >
                                             {product.status}
                                         </span>
@@ -590,42 +585,43 @@ export default function AdminProductsPage() {
                     </div>
 
                     {/* Status toggle */}
-                    <div>
-                        <label className="block text-sm font-medium text-foreground mb-1.5">
-                            Status
-                        </label>
-                        <div className="flex gap-2">
-                            {(
-                                [
-                                    { label: "Available", value: "available" },
-                                    {
-                                        label: "Unavailable",
-                                        value: "unavailable",
-                                    },
-                                ] as const
-                            ).map((opt) => (
-                                <button
-                                    key={opt.value}
-                                    type="button"
-                                    onClick={() =>
-                                        setForm((prev) => ({
-                                            ...prev,
-                                            status: opt.value,
-                                        }))
-                                    }
-                                    className={`flex-1 h-10 rounded-lg text-sm font-medium transition-colors ${
-                                        form.status === opt.value
-                                            ? opt.value === "available"
-                                                ? "bg-green-100 text-green-700 ring-1 ring-green-300"
-                                                : "bg-red-100 text-red-700 ring-1 ring-red-300"
-                                            : "border border-border hover:bg-accent"
-                                    }`}
-                                >
-                                    {opt.label}
-                                </button>
-                            ))}
+                    {editingProduct && (
+                        <div>
+                            <label className="block text-sm font-medium text-foreground mb-1.5">
+                                Status
+                            </label>
+                            <div className="flex gap-2">
+                                {(
+                                    [
+                                        { label: "Available", value: "available" },
+                                        {
+                                            label: "Unavailable",
+                                            value: "unavailable",
+                                        },
+                                    ] as const
+                                ).map((opt) => (
+                                    <button
+                                        key={opt.value}
+                                        type="button"
+                                        onClick={() =>
+                                            setForm((prev) => ({
+                                                ...prev,
+                                                status: opt.value,
+                                            }))
+                                        }
+                                        className={`flex-1 h-10 rounded-lg text-sm font-medium transition-colors ${form.status === opt.value
+                                                ? opt.value === "available"
+                                                    ? "bg-green-100 text-green-700 ring-1 ring-green-300"
+                                                    : "bg-red-100 text-red-700 ring-1 ring-red-300"
+                                                : "border border-border hover:bg-accent"
+                                            }`}
+                                    >
+                                        {opt.label}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     {/* Submit */}
                     <div className="flex gap-3 pt-2">
@@ -644,8 +640,8 @@ export default function AdminProductsPage() {
                             {isSaving
                                 ? "Saving..."
                                 : editingProduct
-                                  ? "Update"
-                                  : "Create"}
+                                    ? "Update"
+                                    : "Create"}
                         </button>
                     </div>
                 </div>

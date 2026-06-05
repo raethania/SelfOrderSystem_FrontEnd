@@ -189,11 +189,16 @@ export default function OrderHistoryDetailPage() {
                                             {order.order_number}
                                         </p>
                                     </div>
-                                    {/* Status badge */}
-                                    <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${config.badgeClass}`}>
-                                        <span style={{ color: config.iconColor }}>{config.icon}</span>
-                                        {config.label}
-                                    </span>
+                                    {/* Badges */}
+                                    <div className="flex gap-2">
+                                        <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold ${config.badgeClass}`}>
+                                            <span style={{ color: config.iconColor }}>{config.icon}</span>
+                                            {config.label}
+                                        </span>
+                                        <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold ${order.is_paid ? 'bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400' : 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400'}`}>
+                                            {order.is_paid ? 'Paid' : 'Unpaid'}
+                                        </span>
+                                    </div>
                                 </div>
                             </CardHeader>
 

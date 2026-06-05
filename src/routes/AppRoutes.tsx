@@ -17,6 +17,13 @@ import AdminProductsPage from "@/pages/admin/AdminProductsPage";
 import AdminTransactionsPage from "@/pages/admin/AdminTransactionsPage";
 import AdminReportsPage from "@/pages/admin/AdminReportsPage";
 
+// Cashier pages
+import CashierOrdersPage from "@/pages/cashier/CashierOrdersPage";
+import CashierOrderDetailPage from "@/pages/cashier/CashierOrderDetailPage";
+import CashierTransactionsPage from "@/pages/cashier/CashierTransactionsPage";
+
+// Kitchen pages
+import KitchenOrdersPage from "@/pages/kitchen/KitchenOrdersPage";
 
 export default function AppRoutes() {
   return (
@@ -129,25 +136,35 @@ export default function AppRoutes() {
         path="/cashier/orders"
         element={
           <ProtectedRoute allowedRoles={["cashier", "admin"]}>
-            <div>Cashier Orders Page</div>
+            <CashierOrdersPage />
           </ProtectedRoute>
         }
       />
 
       <Route
-        path="/kitchen/dashboard"
+        path="/cashier/orders/:id"
         element={
-          <ProtectedRoute allowedRoles={["kitchen", "admin"]}>
-            <div>Kitchen Dashboard Page</div>
+          <ProtectedRoute allowedRoles={["cashier", "admin"]}>
+            <CashierOrderDetailPage />
           </ProtectedRoute>
         }
       />
 
       <Route
-        path="/kitchen/queue"
+        path="/cashier/transactions"
+        element={
+          <ProtectedRoute allowedRoles={["cashier", "admin"]}>
+            <CashierTransactionsPage />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* ===== Kitchen Routes ===== */}
+      <Route
+        path="/kitchen/orders"
         element={
           <ProtectedRoute allowedRoles={["kitchen", "admin"]}>
-            <div>Kitchen Queue Page</div>
+            <KitchenOrdersPage />
           </ProtectedRoute>
         }
       />

@@ -165,6 +165,11 @@ export default function OrderHistory() {
                                         <CardDescription className="text-xs md:text-sm">
                                             Table {order.table_number} · {order.items?.length || 0} items<br />
                                             {formatDate(order.created_at)}
+                                            <div className="mt-2">
+                                                <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold ${order.is_paid ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                                    {order.is_paid ? 'PAID' : 'UNPAID'}
+                                                </span>
+                                            </div>
                                         </CardDescription>
                                     </CardHeader>
                                     <CardContent className="p-0 text-right shrink-0">
