@@ -26,8 +26,8 @@ export default function LoginForm() {
       setAuth(user, token)
 
       if (user.role === 'admin') navigate('/admin/products')
-      else if (user.role === 'cashier') navigate('/cashier/table-selection')
-      else if (user.role === 'kitchen') navigate('/kitchen/dashboard')
+      else if (user.role === 'cashier') navigate('/cashier/orders')
+      else if (user.role === 'kitchen') navigate('/kitchen/orders')
       else navigate('/customer/home')
     } catch (err: any) {
       setError(err.message || "Failed to login. Please check your credentials.")
