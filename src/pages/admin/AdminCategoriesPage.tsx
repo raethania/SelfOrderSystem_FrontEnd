@@ -234,7 +234,7 @@ export default function AdminCategoriesPage() {
                             ))}
                         </div>
                     )}
-                    
+
                     {categories.length > 0 && (
                         <div className="mt-6">
                             <PaginationControl
@@ -294,8 +294,8 @@ export default function AdminCategoriesPage() {
                             {isSaving
                                 ? "Saving..."
                                 : editingCategory
-                                  ? "Update"
-                                  : "Create"}
+                                    ? "Update"
+                                    : "Create"}
                         </button>
                     </div>
                 </div>
