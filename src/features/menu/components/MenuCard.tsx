@@ -34,7 +34,7 @@ export function MenuCard({ product }: MenuCardProps) {
 
     const imageUrl = product.image
         ? product.image
-        : "https://avatar.vercel.sh/shadcn1"
+        : "/default-food.png"
 
     return (
         <Card

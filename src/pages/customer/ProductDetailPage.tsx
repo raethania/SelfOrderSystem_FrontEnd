@@ -56,7 +56,7 @@ export default function ProductDetailPage() {
         setTimeout(() => setAdded(false), 1500)
     }
 
-    const imageUrl = product?.image ?? "https://avatar.vercel.sh/food"
+    const imageUrl = product?.image ?? "/default-food.png"
     const isUnavailable = product?.status === "unavailable"
     const outOfStock = (product?.stock ?? 0) === 0
 

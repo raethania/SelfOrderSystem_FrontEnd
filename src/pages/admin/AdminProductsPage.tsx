@@ -328,7 +328,7 @@ export default function AdminProductsPage() {
                                         <img
                                             src={
                                                 product.image ||
-                                                "https://avatar.vercel.sh/product"
+                                                "/default-food.png"
                                             }
                                             alt={product.name}
                                             className="w-full h-full object-cover brightness-90 group-hover:brightness-100 group-hover:scale-105 transition-all duration-300"
