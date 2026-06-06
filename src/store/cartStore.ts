@@ -14,7 +14,7 @@ interface CartState {
     items: CartItem[];
     notes: string;
 
-    setTableNumber: (tableNumber: number) => void;
+    setTableNumber: (tableNumber: number | null) => void;
     addItem: (product: Omit<CartItem, "quantity">) => void;
     removeItem: (productId: number) => void;
     updateQuantity: (productId: number, quantity: number) => void;

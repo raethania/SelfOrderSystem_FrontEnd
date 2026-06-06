@@ -2,6 +2,8 @@ import PaginationButton from "@/components/ui/PaginationButton"
 import { Search } from "@/components/ui/search"
 import { RefreshButton } from "@/components/ui/RefreshButton"
 import { useEffect, useRef, useState, useCallback } from "react"
+import { useCartStore } from "@/store/cartStore"
+import { Edit2, Check } from "lucide-react"
 
 import { MenuGrid } from "@/features/menu/components/MenuGrid"
 import { CartBar } from "@/features/menu/components/CartBar"
@@ -23,6 +25,55 @@ export default function Homepage() {
 
     const [currentPage, setCurrentPage] = useState(1)
     const [lastPage, setLastPage] = useState(1)
+
+    const tableNumber = useCartStore((state) => state.tableNumber)
+    const setTableNumber = useCartStore((state) => state.setTableNumber)
+    const [isEditingTable, setIsEditingTable] = useState(false)
+    const [tempTable, setTempTable] = useState(tableNumber?.toString() || "")
+
+    const handleSaveTable = () => {
+        const val = parseInt(tempTable)
+        setTableNumber(isNaN(val) ? null : val)
+        setIsEditingTable(false)
+    }
+
+    const titleNode = (
+        <div className="flex items-center gap-3">
+            {isEditingTable ? (
+                <div className="flex items-center gap-2">
+                    <span>Table</span>
+                    <input 
+                        type="number"
+                        min="1"
+                        className="w-16 md:w-20 px-2 py-1 border border-primary rounded-md outline-none focus:ring-2 focus:ring-primary/50 text-xl md:text-2xl lg:text-3xl font-semibold bg-transparent"
+                        value={tempTable}
+                        onChange={(e) => setTempTable(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") handleSaveTable()
+                        }}
+                        autoFocus
+                    />
+                    <button onClick={handleSaveTable} className="p-1 md:p-1.5 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors">
+                        <Check size={20} />
+                    </button>
+                </div>
+            ) : (
+                <>
+                    <span>Table {tableNumber || "0"}</span>
+                    <button 
+                        onClick={() => {
+                            setTempTable(tableNumber?.toString() || "")
+                            setIsEditingTable(true)
+                        }}
+                        className="p-1 md:p-1.5 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-md transition-colors"
+                        title="Edit Table Number"
+                    >
+                        <Edit2 size={18} />
+                    </button>
+                </>
+            )}
+        </div>
+    )
 
     useEffect(() => {
         async function fetchCategories() {
@@ -80,7 +131,7 @@ export default function Homepage() {
     const filteredProducts = products
 
     return (
-        <CustomerLayout title="Table 03" subtitle="Find your favorite meal">
+        <CustomerLayout title={titleNode} subtitle="Find your favorite meal">
             {/* Search bar — hanya muncul di Homepage */}
             <div className="mb-5 flex items-center gap-3">
                 <div className="flex-1">

@@ -1,7 +1,7 @@
 import Navbar from "@/components/ui/Navbar"
 type CustomerLayoutProps = {
     children: React.ReactNode
-    title: string
+    title: React.ReactNode
     subtitle: string
 }
 

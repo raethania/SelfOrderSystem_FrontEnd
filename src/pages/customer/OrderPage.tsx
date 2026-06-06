@@ -24,12 +24,17 @@ export default function OrderPage() {
     const handlePayment = async () => {
         if (items.length === 0) return
 
+        if (!tableNumber) {
+            setError("Please enter your table number before making payment.")
+            return
+        }
+
         setIsLoading(true)
         setError(null)
 
         try {
             await orderApi.createOrder({
-                table_number: tableNumber ?? 3,
+                table_number: tableNumber,
                 notes: notes || null,
                 items: items.map((item) => ({
                     product_id: item.product_id,
