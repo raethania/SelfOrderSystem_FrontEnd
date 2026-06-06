@@ -1,5 +1,7 @@
-import { Link, useLocation } from "react-router-dom"
-import { House, ClipboardList, Clock, User } from "lucide-react"
+import { Link, useLocation, useNavigate } from "react-router-dom"
+import { House, ClipboardList, Clock, User, LogOut } from "lucide-react"
+import { useAuthStore } from "@/store/authStore"
+import { authApi } from "@/features/auth/api/authApi"
 
 type NavbarItemType = {
     icon: React.ReactNode
@@ -37,6 +39,19 @@ const NavbarItems: NavbarItemType[] = [
 
 export default function Navbar() {
     const location = useLocation()
+    const navigate = useNavigate()
+    const { user, logout } = useAuthStore()
+
+    const handleLogout = async () => {
+        try {
+            await authApi.logout()
+        } catch {
+            // Even if the API call fails, still clear local auth state
+        } finally {
+            logout()
+            navigate("/login", { replace: true })
+        }
+    }
 
     return (
         <>
@@ -65,7 +80,7 @@ export default function Navbar() {
             </nav>
 
             {/* Desktop sidebar navbar */}
-            <aside className="hidden md:flex flex-col w-60 lg:w-64 bg-white border-r border-border min-h-dvh sticky top-0 shrink-0">
+            <aside className="hidden md:flex flex-col w-60 lg:w-64 bg-white border-r border-border h-dvh sticky top-0 shrink-0">
                 <div className="p-6 pb-4">
                     <h2 className="text-xl font-bold text-primary tracking-tight">Numbas</h2>
                     <p className="text-xs text-muted-foreground mt-1">Self Order System</p>
@@ -94,9 +109,27 @@ export default function Navbar() {
                     })}
                 </nav>
 
-                <div className="p-4 mx-3 mb-4 bg-accent/50 rounded-xl">
-                    <p className="text-xs text-muted-foreground">Table</p>
-                    <p className="text-sm font-semibold text-foreground">03</p>
+                <div className="px-3 pb-4 space-y-2">
+                    {user && (
+                        <div className="p-4 bg-orange-50/60 rounded-xl">
+                            <p className="text-xs text-muted-foreground">Logged in as</p>
+                            <p className="text-sm font-semibold text-foreground truncate">
+                                {user.name}
+                            </p>
+                            <p className="text-xs text-muted-foreground capitalize">
+                                {user.role}
+                            </p>
+                        </div>
+                    )}
+                    <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl w-full text-foreground/60 hover:bg-red-50 hover:text-red-600 transition-all duration-200 group cursor-pointer"
+                    >
+                        <span className="group-hover:scale-110 transition-transform">
+                            <LogOut size={20} />
+                        </span>
+                        <span className="text-sm font-medium">Logout</span>
+                    </button>
                 </div>
             </aside>
         </>

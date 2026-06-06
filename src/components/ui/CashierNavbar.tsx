@@ -78,7 +78,7 @@ export default function CashierNavbar() {
             </nav>
 
             {/* Desktop sidebar navbar */}
-            <aside className="hidden md:flex flex-col w-60 lg:w-64 bg-white border-r border-border min-h-dvh sticky top-0 shrink-0">
+            <aside className="hidden md:flex flex-col w-60 lg:w-64 bg-white border-r border-border h-dvh sticky top-0 shrink-0">
                 {/* Logo */}
                 <div className="p-6 pb-4">
                     <h2 className="text-xl font-bold text-primary tracking-tight">
