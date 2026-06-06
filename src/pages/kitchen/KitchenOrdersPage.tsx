@@ -65,6 +65,7 @@ export default function KitchenOrdersPage() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
 
     // Filters
     const [statusFilter, setStatusFilter] = useState<OrderStatus | "">("");
@@ -92,9 +93,18 @@ export default function KitchenOrdersPage() {
         setTimeout(() => setToast(null), 3000);
     };
 
-    // ── Fetch orders list ────────────────────────────────────────────────
+    // ── Fetch orders list (Only for List View) ────────────────────────────────────────────────
     const fetchOrders = useCallback(
         async (showLoading = true) => {
+            // Check if board view is active
+            const isBoard = statusFilter === "" || statusFilter === "pending" || statusFilter === "preparing" || statusFilter === "ready";
+            
+            if (isBoard) {
+                // If board view, the BoardColumn components will fetch their own data
+                if (showLoading) setIsLoading(false);
+                return;
+            }
+
             if (isFetchingRef.current) return;
             isFetchingRef.current = true;
 
@@ -103,7 +113,7 @@ export default function KitchenOrdersPage() {
             try {
                 const params: Record<string, unknown> = {
                     page: currentPage,
-                    limit: 30, // 30 is good for board view (3 columns of 10)
+                    limit: 20, 
                     date: dateFilter,
                 };
                 if (statusFilter) params.status = statusFilter;
@@ -120,7 +130,7 @@ export default function KitchenOrdersPage() {
                 isFetchingRef.current = false;
             }
         },
-        [statusFilter, dateFilter]
+        [statusFilter, dateFilter, currentPage]
     );
 
     // Initial + filter change
@@ -132,6 +142,7 @@ export default function KitchenOrdersPage() {
     useEffect(() => {
         const intervalId = setInterval(() => {
             fetchOrders(false);
+            setRefreshTrigger(prev => prev + 1);
         }, 15000);
         return () => clearInterval(intervalId);
     }, [fetchOrders]);
@@ -171,6 +182,7 @@ export default function KitchenOrdersPage() {
             );
             // Refresh list and detail
             await fetchOrders(false);
+            setRefreshTrigger(prev => prev + 1);
             // Refresh detail if same order
             if (selectedOrder && selectedOrder.id === orderId) {
                 const res = await orderApi.getOrderById(orderId);
@@ -200,59 +212,77 @@ export default function KitchenOrdersPage() {
             subtitle="Pantau dan proses pesanan dapur"
         >
             {/* ── Filters ── */}
-            <div className="flex flex-col gap-4 mb-6">
-                {/* Status filter - Dropdown (Mobile/Tablet) & Chips (Desktop) */}
-                <div className="flex items-center gap-3">
-                    {/* Mobile/Tablet Dropdown */}
-                    <select
-                        value={statusFilter}
-                        onChange={(e) => {
-                            setStatusFilter(e.target.value as OrderStatus | "");
-                            setCurrentPage(1);
-                        }}
-                        className="w-full lg:hidden h-11 px-4 rounded-xl border border-border bg-card text-sm font-medium outline-none transition-colors focus:border-orange-500 focus:ring-1 focus:ring-orange-500 appearance-none"
-                    >
-                        {STATUS_OPTIONS.map((opt) => (
-                            <option key={opt.value} value={opt.value}>
-                                Status: {opt.label}
-                            </option>
-                        ))}
-                    </select>
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
+                <div className="flex flex-col lg:flex-row lg:items-center gap-4 lg:gap-3 w-full lg:w-auto flex-1">
+                    {/* Status filter - Dropdown (Mobile/Tablet) & Chips (Desktop) */}
+                    <div className="flex items-center gap-3 w-full lg:w-auto">
+                        {/* Mobile/Tablet Dropdown */}
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => {
+                                setStatusFilter(e.target.value as OrderStatus | "");
+                                setCurrentPage(1);
+                            }}
+                            className="w-full lg:hidden h-11 px-4 rounded-xl border border-border bg-card text-sm font-medium outline-none transition-colors focus:border-orange-500 focus:ring-1 focus:ring-orange-500 appearance-none"
+                        >
+                            {STATUS_OPTIONS.map((opt) => (
+                                <option key={opt.value} value={opt.value}>
+                                    Status: {opt.label}
+                                </option>
+                            ))}
+                        </select>
 
-                    {/* Desktop Chips */}
-                    <div className="hidden lg:flex gap-2 flex-1">
-                        {STATUS_OPTIONS.map((opt) => (
-                            <button
-                                key={opt.value}
-                                onClick={() => {
-                                    setStatusFilter(opt.value);
-                                    setCurrentPage(1);
+                        {/* Desktop Chips */}
+                        <div className="hidden lg:flex flex-wrap gap-2">
+                            {STATUS_OPTIONS.map((opt) => (
+                                <button
+                                    key={opt.value}
+                                    onClick={() => {
+                                        setStatusFilter(opt.value);
+                                        setCurrentPage(1);
+                                    }}
+                                    className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors shrink-0 ${statusFilter === opt.value
+                                        ? "bg-orange-600 text-white"
+                                        : "bg-card border border-border text-foreground hover:bg-accent"
+                                        }`}
+                                >
+                                    {opt.label}
+                                </button>
+                            ))}
+                        </div>
+
+                        {/* Refresh Button - Mobile/Tablet */}
+                        <div className="lg:hidden shrink-0">
+                            <RefreshButton
+                                onRefresh={() => {
+                                    fetchOrders(true);
+                                    setRefreshTrigger(prev => prev + 1);
                                 }}
-                                className={`px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-colors shrink-0 ${statusFilter === opt.value
-                                    ? "bg-orange-600 text-white"
-                                    : "bg-card border border-border text-foreground hover:bg-accent"
-                                    }`}
-                            >
-                                {opt.label}
-                            </button>
-                        ))}
+                                colorClass="text-orange-600"
+                            />
+                        </div>
                     </div>
 
-                    {/* Refresh Button */}
-                    <RefreshButton
-                        onRefresh={() => fetchOrders(true)}
-                        colorClass="text-orange-600"
+                    {/* Date filter */}
+                    <DateFilter
+                        value={dateFilter}
+                        onChange={(v) => {
+                            setDateFilter(v);
+                            setCurrentPage(1);
+                        }}
                     />
                 </div>
 
-                {/* Date filter */}
-                <DateFilter
-                    value={dateFilter}
-                    onChange={(v) => {
-                        setDateFilter(v);
-                        setCurrentPage(1);
-                    }}
-                />
+                {/* Refresh Button - Desktop */}
+                <div className="hidden lg:block shrink-0">
+                    <RefreshButton
+                        onRefresh={() => {
+                            fetchOrders(true);
+                            setRefreshTrigger(prev => prev + 1);
+                        }}
+                        colorClass="text-orange-600"
+                    />
+                </div>
             </div>
 
             {/* ── Loading ── */}
@@ -269,7 +299,10 @@ export default function KitchenOrdersPage() {
                         {error}
                     </p>
                     <button
-                        onClick={() => fetchOrders(true)}
+                        onClick={() => {
+                            fetchOrders(true);
+                            setRefreshTrigger(prev => prev + 1);
+                        }}
                         className="text-orange-600 underline text-sm"
                     >
                         Retry
@@ -280,7 +313,7 @@ export default function KitchenOrdersPage() {
             {/* ── Content ── */}
             {!isLoading && !error && (
                 <div className="relative">
-                    {orders.length === 0 ? (
+                    {orders.length === 0 && !isBoardView ? (
                         <div className="text-center py-16 text-muted-foreground">
                             <ChefHat
                                 size={48}
@@ -304,47 +337,15 @@ export default function KitchenOrdersPage() {
                                 )
                                     return null;
 
-                                const colOrders = ordersByStatus(col.status);
                                 return (
-                                    <div key={col.status} className="flex flex-col">
-                                        {/* Column header */}
-                                        <div
-                                            className={`flex items-center gap-2 px-4 py-3 rounded-xl border mb-3 ${col.headerClass}`}
-                                        >
-                                            <span
-                                                className={`w-2.5 h-2.5 rounded-full ${col.dotClass} animate-pulse`}
-                                            />
-                                            <span className="font-semibold text-sm">
-                                                {col.label}
-                                            </span>
-                                            <span className="ml-auto text-xs font-bold bg-white/60 px-2 py-0.5 rounded-full">
-                                                {colOrders.length}
-                                            </span>
-                                        </div>
-
-                                        {/* Column orders */}
-                                        <div className="flex flex-col gap-3 min-h-[120px]">
-                                            {colOrders.length === 0 ? (
-                                                <div className="text-center py-8 text-muted-foreground/50 text-xs">
-                                                    Tidak ada pesanan
-                                                </div>
-                                            ) : (
-                                                colOrders.map((order) => (
-                                                    <OrderCard
-                                                        key={order.id}
-                                                        order={order}
-                                                        onClick={() =>
-                                                            openDetail(order)
-                                                        }
-                                                        isSelected={
-                                                            selectedOrder?.id ===
-                                                            order.id
-                                                        }
-                                                    />
-                                                ))
-                                            )}
-                                        </div>
-                                    </div>
+                                    <BoardColumn 
+                                        key={col.status}
+                                        col={col}
+                                        dateFilter={dateFilter}
+                                        refreshTrigger={refreshTrigger}
+                                        onOpenDetail={openDetail}
+                                        selectedOrderId={selectedOrder?.id}
+                                    />
                                 );
                             })}
                         </div>
@@ -364,7 +365,7 @@ export default function KitchenOrdersPage() {
                         </div>
                     )}
 
-                    {orders.length > 0 && (
+                    {!isBoardView && orders.length > 0 && (
                         <div className="mt-6">
                             <PaginationControl
                                 currentPage={currentPage}
@@ -405,6 +406,118 @@ export default function KitchenOrdersPage() {
 // ═══════════════════════════════════════════════════════════════════════════
 // ── Sub-components ──
 // ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * Individual Board Column with independent fetching and pagination
+ */
+function BoardColumn({
+    col,
+    dateFilter,
+    refreshTrigger,
+    onOpenDetail,
+    selectedOrderId
+}: {
+    col: typeof BOARD_COLUMNS[0];
+    dateFilter: string;
+    refreshTrigger: number;
+    onOpenDetail: (order: Order) => void;
+    selectedOrderId?: number;
+}) {
+    const [orders, setOrders] = useState<Order[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
+    const [totalItems, setTotalItems] = useState(0);
+    const isFetchingRef = useRef(false);
+
+    const fetchColumnOrders = useCallback(async (showLoading = true) => {
+        if (isFetchingRef.current) return;
+        isFetchingRef.current = true;
+        if (showLoading) setIsLoading(true);
+        try {
+            const res = await orderApi.getOrders({
+                status: col.status,
+                date: dateFilter,
+                page: currentPage,
+                limit: 5 // 5 items per page in column view is manageable
+            });
+            setOrders(res.data);
+            if ("meta" in res && (res as any).meta) {
+                setLastPage((res as any).meta.last_page);
+                setTotalItems((res as any).meta.total || res.data.length);
+            } else {
+                setTotalItems(res.data.length);
+            }
+        } catch {
+            // silent fail for column
+        } finally {
+            if (showLoading) setIsLoading(false);
+            isFetchingRef.current = false;
+        }
+    }, [col.status, dateFilter, currentPage]);
+
+    useEffect(() => {
+        fetchColumnOrders(true);
+    }, [fetchColumnOrders]);
+
+    useEffect(() => {
+        if (refreshTrigger > 0) {
+            fetchColumnOrders(false);
+        }
+    }, [refreshTrigger, fetchColumnOrders]);
+
+    return (
+        <div className="flex flex-col h-full bg-accent/20 rounded-2xl p-2 border border-border/50">
+            {/* Column header */}
+            <div
+                className={`flex items-center gap-2 px-4 py-3 rounded-xl border mb-3 ${col.headerClass}`}
+            >
+                <span
+                    className={`w-2.5 h-2.5 rounded-full ${col.dotClass} animate-pulse`}
+                />
+                <span className="font-semibold text-sm">
+                    {col.label}
+                </span>
+                <span className="ml-auto text-xs font-bold bg-white/60 px-2 py-0.5 rounded-full">
+                    {totalItems}
+                </span>
+            </div>
+
+            {/* Column orders */}
+            <div className="flex flex-col gap-3 min-h-[120px] flex-1 relative">
+                {isLoading && orders.length === 0 ? (
+                    <div className="flex justify-center items-center py-10">
+                        <div className={`animate-spin w-6 h-6 border-2 border-t-transparent rounded-full border-${col.dotClass.split('-')[1]}-500`} />
+                    </div>
+                ) : orders.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground/50 text-xs">
+                        Tidak ada pesanan
+                    </div>
+                ) : (
+                    orders.map((order) => (
+                        <OrderCard
+                            key={order.id}
+                            order={order}
+                            onClick={() => onOpenDetail(order)}
+                            isSelected={selectedOrderId === order.id}
+                        />
+                    ))
+                )}
+            </div>
+
+            {/* Pagination Controls */}
+            {!isLoading && lastPage > 1 && (
+                <div className="mt-4 pt-3 border-t border-border/50">
+                    <PaginationControl
+                        currentPage={currentPage}
+                        lastPage={lastPage}
+                        onPageChange={setCurrentPage}
+                    />
+                </div>
+            )}
+        </div>
+    );
+}
 
 /**
  * Order card shown in board columns and list view
