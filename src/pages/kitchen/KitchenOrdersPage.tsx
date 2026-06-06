@@ -196,8 +196,6 @@ export default function KitchenOrdersPage() {
     };
 
     // ── Group orders by status for board ─────────────────────────────────
-    const ordersByStatus = (status: OrderStatus) =>
-        orders.filter((o) => o.status === status);
 
     // Check if board view is active (no specific status filter, or filter is one of the 3 columns)
     const isBoardView =

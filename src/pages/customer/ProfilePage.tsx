@@ -49,7 +49,7 @@ export default function ProfilePage() {
                             <div>
                                 <p className="text-xs text-muted-foreground">Account Created</p>
                                 <p className="text-sm font-medium text-foreground">
-                                    {new Date(user.created_at).toLocaleDateString("id-ID", {
+                                    {new Date(user.created_at || "").toLocaleDateString("id-ID", {
                                         day: "numeric", month: "long", year: "numeric"
                                     })}
                                 </p>
@@ -65,7 +65,7 @@ export default function ProfilePage() {
                             <div>
                                 <p className="text-xs text-muted-foreground">Last Updated</p>
                                 <p className="text-sm font-medium text-foreground">
-                                    {new Date(user.updated_at).toLocaleDateString("id-ID", {
+                                    {new Date(user.updated_at || "").toLocaleDateString("id-ID", {
                                         day: "numeric", month: "long", year: "numeric",
                                         hour: "2-digit", minute: "2-digit"
                                     })}
